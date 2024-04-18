@@ -92,6 +92,11 @@ public class Graph {
         }
         return sb.toString();
     }
+
+    /**
+     * Computes the minimum cost and maximum flow from source to
+     * sink using a variation of the Bellman-Ford algorithm.
+     */
     public void minCostMaxFlow() {
         System.out.println(printMatrix("Matrix", capacity));
         while (hasAugmentingCheapestPath()) {
@@ -101,7 +106,7 @@ public class Graph {
         for (String path : paths) {
             System.out.println(path);
         }
-        printFlowSummary();  // Print the flow summary after computing min-cost max-flow
+        printFlowSummary();
     }
 
     private void printFlowSummary() {
@@ -114,6 +119,13 @@ public class Graph {
             }
         }
     }
+
+    /**
+     * Checks for the presence of an augmenting path with the cheapest cost from the source to any node,
+     * updating the potential cheapest paths and predecessors.
+     *
+     * @return true if an augmenting path exists, false otherwise
+     */
     private boolean hasAugmentingCheapestPath() {
         pred = new int[vertexCt];
         cost = new int[vertexCt];
@@ -134,6 +146,10 @@ public class Graph {
         return pred[sink] != -1;
     }
 
+    /**
+     * Updates the flow along the cheapest augmenting path found by hasAugmentingCheapestPath,
+     * augmenting flow, and adjusting residuals accordingly.
+     */
     private void augmentFlow() {
         int path_flow = Integer.MAX_VALUE;
         int total_cost = 0;
@@ -152,14 +168,14 @@ public class Graph {
 
         }
 
-        // Record the path
+        // Record the path flow and the cost
         List<Integer> path = new ArrayList<>();
         for (int v = sink; v != source; v = pred[v]) {
             path.add(v);
         }
         path.add(source);
         Collections.reverse(path);
-        paths.add(path.toString() + "(" + path_flow + ") $" + total_cost);
+        paths.add(path + "(" + path_flow + ") $" + total_cost);
     }
 
     public static void main(String[] args) {
