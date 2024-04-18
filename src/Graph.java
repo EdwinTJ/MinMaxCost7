@@ -22,6 +22,15 @@ public class Graph {
         makeGraph(fileName);
     }
 
+    /**
+     * Method to add an edge
+     *
+     * @param source      start of edge
+     * @param destination end of edge
+     * @param cap         capacity of edge
+     * @param weight      weight of edge, if any
+     * @return edge created
+     */
     private boolean addEdge(int source, int destination, int cap, int weight) {
         if (source < 0 || source >= vertexCt || destination < 0 || destination >= vertexCt) {
             return false;
@@ -33,6 +42,11 @@ public class Graph {
         return true;
     }
 
+    /**
+     * Method to make the graph
+     *
+     * @param filename of file containing data
+     */
     private void makeGraph(String filename) {
         try {
             System.out.println("\n****Find Flow " + filename);
@@ -52,22 +66,54 @@ public class Graph {
             }
             reader.close();
             sink = vertexCt - 1;
+
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
+    /**
+     * Method to get a visual of the graph
+     *
+     * @return the visual
+     */
+    public String printMatrix(String label, int[][] m) {
+        StringBuilder sb = new StringBuilder();
+        sb.append("\n " + label+ " \n     ");
+        for (int i=0; i < vertexCt; i++)
+            sb.append(String.format("%5d", i));
+        sb.append("\n");
+        for (int i = 0; i < vertexCt; i++) {
+            sb.append(String.format("%5d",i));
+            for (int j = 0; j < vertexCt; j++) {
+                sb.append(String.format("%5d",m[i][j]));
+            }
+            sb.append("\n");
+        }
+        return sb.toString();
+    }
     public void minCostMaxFlow() {
+        System.out.println(printMatrix("Matrix", capacity));
         while (hasAugmentingCheapestPath()) {
             augmentFlow();
-
         }
-        System.out.println("Paths found in order (" + graphName + ")");
+        System.out.println("Paths found in order (" + graphName + "):");
         for (String path : paths) {
             System.out.println(path);
         }
+        printFlowSummary();  // Print the flow summary after computing min-cost max-flow
     }
 
+    private void printFlowSummary() {
+        System.out.println("Final flow on each edge:");
+        for (int i = 0; i < vertexCt; i++) {
+            for (int j = 0; j < vertexCt; j++) {
+                if (totalFlow[i][j] > 0) { // Only print edges with flow greater than 0
+                    System.out.printf("Flow %d -> %d (%d) $ %d\n", i, j, totalFlow[i][j], edgeCost[i][j]);
+                }
+            }
+        }
+    }
     private boolean hasAugmentingCheapestPath() {
         pred = new int[vertexCt];
         cost = new int[vertexCt];
