@@ -113,7 +113,7 @@ public class Graph {
         System.out.println("Final flow on each edge:");
         for (int i = 0; i < vertexCt; i++) {
             for (int j = 0; j < vertexCt; j++) {
-                if (totalFlow[i][j] > 0) { // Only print edges with flow greater than 0
+                if (totalFlow[i][j] > 0 && edgeCost[i][j] >= 0) {
                     System.out.printf("Flow %d -> %d (%d) $ %d\n", i, j, totalFlow[i][j], edgeCost[i][j]);
                 }
             }
@@ -179,7 +179,9 @@ public class Graph {
     }
 
     public static void main(String[] args) {
-        String[] files = {"transport0.txt"};
+        String[] files = {"transport0.txt", "transport1.txt", "transport2.txt",
+                "transport3.txt", "flow10.txt"};
+//        String[] files = {"transport0.txt"};
         for (String fileName : files) {
             Graph graph = new Graph(fileName);
             graph.minCostMaxFlow();
